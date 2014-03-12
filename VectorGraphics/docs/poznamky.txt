@@ -1,0 +1,7 @@
+- zanalyzovat priklad z java tutorialu
+- rotovat usecku okolo jedneho konca alebo okolo stredu
+- objekty inicializovat suradnicami pociatocneho bodu a vektorom smeru - nie koordinatmi tvaru
+- obchadzanie prekazok (pathfinding, bioalgoritmy?)
+- nahodny pohyb
+- uzivatelske vstupy
+- hudba
