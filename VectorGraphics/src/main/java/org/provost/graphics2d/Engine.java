@@ -2,6 +2,7 @@ package org.provost.graphics2d;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,8 +73,10 @@ public class Engine extends Thread {
 			, Color.lightGray);
 		objects.add(ship);
 		/* benchmarking
-		Random rnd = new Random(new Date().getTime());
-		for(int i = 0; i < 3600; i++) {
+		// 10000 non-antialiased triangles
+		// 200 antialiased triangles: 30 fps
+		java.util.Random rnd = new java.util.Random(new Date().getTime());
+		for(int i = 0; i < 10000; i++) {
 			int x = rnd.nextInt(631);
 			if(x < 10) {
 				x += 10;
@@ -119,6 +122,8 @@ public class Engine extends Thread {
 			synchronized(MainWin.getInstance().getCanvas().getBufferStrategy()) {
 				g = (Graphics2D) MainWin.getInstance().getCanvas().getBufferStrategy().getDrawGraphics();
 			}
+
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.black);
 			g.fillRect(0, 0, MainWin.getInstance().getPreferredSize().width, MainWin.getInstance().getPreferredSize().height);
 

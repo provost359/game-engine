@@ -11,6 +11,10 @@ public abstract class Graphics {
 	
 	private static GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
+	public static GraphicsEnvironment getGraphicsEnvironment() {
+		return Graphics.graphicsEnvironment;
+	}
+
 	public static GraphicsDevice[] getSystemInformation() {
 		return graphicsEnvironment.getScreenDevices();
 	}
