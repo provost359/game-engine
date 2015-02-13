@@ -25,10 +25,12 @@ public class Engine extends Thread {
 	private boolean pause = false;
 	private long lastRun = System.currentTimeMillis();
 
+	private Configuration config = null;
 	private List<BasicVector> objects = new ArrayList<BasicVector>();
 
 	private Engine() {
 		super();
+		this.config = new Configuration();
 		log.info("Engine created");
 	}
 
@@ -40,6 +42,8 @@ public class Engine extends Thread {
 	public void run() {
 		try {
 			log.debug("Begin");
+			MainWin mainWin = MainWin.getInstance();
+			mainWin.show();
 			FPSProfiler fpsProfiler = new FPSProfiler();
 			createObjects();
 			while(run) {
@@ -54,29 +58,36 @@ public class Engine extends Thread {
 				fpsProfiler.endFrame(new Date().getTime());
 				
 				logFps(fpsProfiler);
+				
 			}
 		} finally {
 			log.debug("Stopped running");
+			/*
+			 * If Engine is stopped (error occurs) before MainWin fully initializes,
+			 * MainWin will get displayed even without Engine running.
+			 * This ensures that MainWin is really disposed when Engine stops running.
+			 */
+			disposeWindow();
 		}
 	}
 
 	private void logFps(FPSProfiler fpsProfiler) {
 		if(fpsProfiler.getNumFrames() % 50L == 0) {
-			log.debug("FPS: " + fpsProfiler.calculateFps());
+			log.debug("FPS: " + fpsProfiler.calculateOverallFps());
 		}
 	}
 
 	private void createObjects() {
-		Triangle ship = new Triangle(new Coordinates(50, (MainWin.getInstance().getPreferredSize().height / 2) - 5)
-			, new Coordinates(50, (MainWin.getInstance().getPreferredSize().height / 2) + 5)
-			, new Coordinates(60, MainWin.getInstance().getPreferredSize().height / 2)
+		Triangle ship = new Triangle(new Coordinates(50, (MainWin.getInstance().getHeight() / 2) - 5)
+			, new Coordinates(50, (MainWin.getInstance().getHeight() / 2) + 5)
+			, new Coordinates(60, MainWin.getInstance().getHeight() / 2)
 			, Color.lightGray);
 		objects.add(ship);
 		/* benchmarking
 		// 10000 non-antialiased triangles
 		// 200 antialiased triangles: 30 fps
 		java.util.Random rnd = new java.util.Random(new Date().getTime());
-		for(int i = 0; i < 10000; i++) {
+		for(int i = 0; i < 8000; i++) {
 			int x = rnd.nextInt(631);
 			if(x < 10) {
 				x += 10;
@@ -125,7 +136,7 @@ public class Engine extends Thread {
 
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setColor(Color.black);
-			g.fillRect(0, 0, MainWin.getInstance().getPreferredSize().width, MainWin.getInstance().getPreferredSize().height);
+			g.fillRect(0, 0, MainWin.getInstance().getWidth(), MainWin.getInstance().getHeight());
 
 			// TODO add custom graphics to display
 			for(int i = 0; i < objects.size(); i++) {
@@ -166,6 +177,13 @@ public class Engine extends Thread {
 		synchronized(this) {
 			this.notifyAll();
 		}
+		disposeWindow();
+	}
+
+	private void disposeWindow() {
+		if(MainWin.getInstance() != null) {
+			MainWin.getInstance().end();
+		}
 	}
 
 	@Override
@@ -197,6 +215,10 @@ public class Engine extends Thread {
 				}
 			}
 		}
+	}
+
+	public Configuration getConfig() {
+		return config;
 	}
 
 }

@@ -1,3 +1,10 @@
+IBA JEDEN CENTRALNY SINGLETON, napriklad Engine, od ktoreho si ostatne objekty vezmu, co budu potrebovat!
+Korektne ukoncit okno s kanvasom!
+
+POKRACOVAT
+Otestovat a konfigurovat fullscreen - dohliadnut na korektne ukoncenie aj s chybou (vid simulacia 
+
+TODO
 - zanalyzovat priklad z java tutorialu
 - rotovat usecku okolo jedneho konca alebo okolo stredu
 - objekty inicializovat suradnicami pociatocneho bodu a vektorom smeru - nie koordinatmi tvaru
